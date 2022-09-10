@@ -1,4 +1,4 @@
-# Exercises
+# Projects
 
 -   [Demo](builds/demo/)
 -   [Project 01](builds/project_1/)
