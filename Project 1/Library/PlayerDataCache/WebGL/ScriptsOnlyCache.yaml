@@ -1,8 +1,12 @@
 ScriptsOnlyBuild:
   usedScripts:
+    Assembly-CSharp.dll:
+    - vehicle
     Unity.InputSystem.dll:
+    - UnityEngine.InputSystem.InputActionAsset
     - UnityEngine.InputSystem.InputSettings
     - UnityEngine.InputSystem.InputSystemObject
+    - UnityEngine.InputSystem.PlayerInput
     - UnityEngine.InputSystem.RemoteInputPlayerConnection
     Unity.Rider.Editor.dll:
     - Packages.Rider.Editor.UnitTesting.CallbackData
@@ -12,26 +16,60 @@ ScriptsOnlyBuild:
     - UnityEditor.TestTools.TestRunner.TestRun.TestJobDataHolder
   serializedClasses:
     Unity.InputSystem:
+    - UnityEngine.InputSystem.InputAction
+    - UnityEngine.InputSystem.InputActionMap
+    - UnityEngine.InputSystem.InputBinding
+    - UnityEngine.InputSystem.InputControlScheme
+    - UnityEngine.InputSystem.InputControlScheme/DeviceRequirement
     - UnityEngine.InputSystem.InputSettings/iOSSettings
+    - UnityEngine.InputSystem.PlayerInput/ActionEvent
+    - UnityEngine.InputSystem.PlayerInput/ControlsChangedEvent
+    - UnityEngine.InputSystem.PlayerInput/DeviceLostEvent
+    - UnityEngine.InputSystem.PlayerInput/DeviceRegainedEvent
     - UnityEngine.InputSystem.iOS.PrivacyDataUsage
-  methodsToPreserve: []
+    UnityEngine.CoreModule:
+    - UnityEngine.Events.ArgumentCache
+    - UnityEngine.Events.PersistentCallGroup
+    - UnityEngine.Events.PersistentListenerMode
+  methodsToPreserve:
+  - assembly: Assembly-CSharp
+    fullTypeName: vehicle
+    methodName: OnMove
   sceneClasses:
-    Assets/Scenes/SampleScene.unity:
+    Assets/Scenes/SHUMp project.unity:
     - Class: 1
       Script: {instanceID: 0}
     - Class: 4
       Script: {instanceID: 0}
     - Class: 20
       Script: {instanceID: 0}
+    - Class: 21
+      Script: {instanceID: 0}
     - Class: 28
+      Script: {instanceID: 0}
+    - Class: 48
       Script: {instanceID: 0}
     - Class: 81
       Script: {instanceID: 0}
     - Class: 104
       Script: {instanceID: 0}
+    - Class: 114
+      Script: {instanceID: 1560}
+    - Class: 114
+      Script: {instanceID: 2176}
+    - Class: 114
+      Script: {instanceID: 3098}
+    - Class: 114
+      Script: {instanceID: 18290}
+    - Class: 115
+      Script: {instanceID: 0}
     - Class: 157
       Script: {instanceID: 0}
     - Class: 196
+      Script: {instanceID: 0}
+    - Class: 212
+      Script: {instanceID: 0}
+    - Class: 213
       Script: {instanceID: 0}
   scriptHashData:
   - hash:
@@ -234,6 +272,12 @@ ScriptsOnlyBuild:
     className: Dropdown
   - hash:
       serializedVersion: 2
+      Hash: 7b492b58a22ab09f8f7e570d3bbc2611
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: ColisionManager
+  - hash:
+      serializedVersion: 2
       Hash: 800c50acba124432abb4cf0d47202e06
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
@@ -280,6 +324,12 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
     className: RawImage
+  - hash:
+      serializedVersion: 2
+      Hash: 227447f23889ddccd2de894fe317f97b
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: CollidableObject
   - hash:
       serializedVersion: 2
       Hash: d85b490177c3124d2335460060a2b807
@@ -426,6 +476,12 @@ ScriptsOnlyBuild:
     className: GraphicRaycaster
   - hash:
       serializedVersion: 2
+      Hash: 7c86834b2d867065b11603e74016507c
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: vehicle
+  - hash:
+      serializedVersion: 2
       Hash: e7a73f5f78ba6445195ec23b74a1ce2d
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
@@ -558,5 +614,5 @@ ScriptsOnlyBuild:
     className: TextContainer
   platform: 20
   scenePathNames:
-  - Assets/Scenes/SampleScene.unity
+  - Assets/Scenes/SHUMp project.unity
   playerPath: C:/Users/darie/Documents/GitHub/202-projects-Proviso12/docs/builds/project_1
