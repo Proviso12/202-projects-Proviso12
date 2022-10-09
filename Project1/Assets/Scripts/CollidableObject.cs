@@ -42,8 +42,8 @@ public class CollidableObject : MonoBehaviour
     }
     private void OnDrawGizmos()
     {
-        if(isCurrentlyColliding)
-        { 
+        if (isCurrentlyColliding)
+        {
             Gizmos.color = Color.red;
         }
         else
@@ -51,7 +51,12 @@ public class CollidableObject : MonoBehaviour
             Gizmos.color = Color.green;
         }
         
-        Gizmos.DrawWireCube(transform.position, spriteRenderer.bounds.size);
         Gizmos.DrawWireSphere(transform.position, radius);
+
+        if(spriteRenderer==null)
+        {
+            return;
+        }
+        Gizmos.DrawWireCube(transform.position, spriteRenderer.bounds.size);
     }
 }

@@ -15,7 +15,7 @@ public class vehicle : MonoBehaviour
     void Start()
     {
         screenSize = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height));
-        Debug.Log(screenSize);
+        
     }
 
     // Update is called once per frame
