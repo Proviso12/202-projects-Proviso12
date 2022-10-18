@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
-public class vehicle : MonoBehaviour
+public class Player : MonoBehaviour
 {
 
     public float speed = 1f;
@@ -11,11 +12,17 @@ public class vehicle : MonoBehaviour
     public Vector3 velocity = Vector2.zero;
     private Vector2 movementInput;
     private Vector3 screenSize;
+    public Slider healthbar;
+    
+    public int health;
+    public int maxHealth = 350;
+
     // Start is called before the first frame update
     void Start()
     {
         screenSize = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height));
-        
+        healthbar = FindObjectOfType<Slider>();
+        health = maxHealth;
     }
 
     // Update is called once per frame
@@ -59,5 +66,12 @@ public class vehicle : MonoBehaviour
     public void OnMove(InputAction.CallbackContext moveContext)
     {
         movementInput = moveContext.ReadValue<Vector2>();
+    }
+
+    public int TakeDamage(int damage)
+    {
+        health -= damage;
+        healthbar.value = (float)health/maxHealth;
+        return health;
     }
 }

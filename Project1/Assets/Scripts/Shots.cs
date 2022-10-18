@@ -9,6 +9,11 @@ public class Shots : MonoBehaviour
     public float speed = 1f;
     public Vector2 direction = Vector2.right;
     public Vector3 velocity = Vector2.zero;
+    public int damage;
+    private float lifeTime =1.5f;
+    private bool liveAmmo = false;
+    public bool isEnemyShot;
+    public int Damage { get { return damage; } }
     void Start()
     {
         
@@ -17,15 +22,23 @@ public class Shots : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position += (Vector3)velocity;
+        transform.position += velocity * speed * Time.deltaTime;
         transform.rotation =
-                Quaternion.LookRotation(Vector3.forward, upwards: (Vector3)direction);
+                Quaternion.LookRotation(Vector3.forward, velocity);
+        lifeTime -= Time.deltaTime;
+        if (lifeTime <= 0 && liveAmmo) 
+        {
+            GameObject.FindGameObjectWithTag("CollisionManager").GetComponent<CollisionManager>().RemoveShot(this);
+            Destroy(gameObject); 
+        }
     }
 
-    public void Shoot(float speed, Vector3 velocity, Vector2 direction)
+    public void Shoot(float speed, Vector3 velocity, int damage, bool isEnemyShot)
     {
         this.speed = speed;
         this.velocity = velocity;
-        this.direction = direction;
+        this.damage = damage;
+        this.isEnemyShot = isEnemyShot;
+        liveAmmo = true;
     }
 }

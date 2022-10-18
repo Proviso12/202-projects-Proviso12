@@ -5,11 +5,13 @@ TagManager:
   serializedVersion: 2
   tags:
   - Collidable
+  - CollisionManager
+  - SpawnManager
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - background
   - Water
   - UI
   - 
@@ -41,4 +43,16 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: background
+    uniqueID: 4175635721
+    locked: 0
+  - name: midground
+    uniqueID: 2346832727
+    locked: 0
+  - name: foreground
+    uniqueID: 754604305
+    locked: 0
+  - name: ui
+    uniqueID: 1989483439
     locked: 0

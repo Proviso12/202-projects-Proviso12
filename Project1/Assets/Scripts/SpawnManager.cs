@@ -5,6 +5,7 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour
 {
     public CollidableObject enemyShip;
+    public CollidableObject enemyFreighter;
     public CollidableObject allyShip;
     public CollidableObject astroid;
 
@@ -12,57 +13,57 @@ public class SpawnManager : MonoBehaviour
     public Shots allyAmmo;
 
     public CollidableObject player;
+    public CollidableObject currentPlayer;
 
     private List<CollidableObject> enemyShips;
-    private List<CollidableObject> allyShips = new List<CollidableObject>();
+    private List<CollidableObject> enemyFreighters;
+    private List<CollidableObject> allyShips;
     private List<CollidableObject> astroids;
 
     public CollisionManager collisionManager;
 
-    public int activeEnemyShips = 5;
-    public int activeAllyShips = 1;
-    public int activeAstroids = 3;
+    public int maxEnemyShips = 1;
+    public int maxAllyShips = 1;
 
     private Vector3 minPosition;
     private Vector3 maxPosition;
 
+    private float frieghterTimer = 60f;
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("Spawn Manager on");
         minPosition = Camera.main.ScreenToWorldPoint(Vector3.zero);
         maxPosition = Camera.main.ScreenToWorldPoint(
             new Vector3(Screen.width, Screen.height, 0f));
         astroids = collisionManager.GetAstroids();
         enemyShips = collisionManager.GetEnemies();
+        enemyFreighters = collisionManager.GetEnemies2();
+        allyShips = collisionManager.GetAllies();
+        SpawnPlayer();
 
-        for (int i = 0; i < 4; i++)
-        {
-            SpawnEnemy();
-        }
-        /*for (int i = 0; i < allyShips.Count - activeAllyShips; i++)
-        {
-            SpawnObject(allyShip);
-        }*/
-        for (int i = 0; i < 3; i++)
-        {
-            SpawnAstroid();
-            Debug.Log("Spawning starting astroid");
-        }
-
+        
+        SpawnFreighter();
+        SpawnEnemy();
     }
 
     // Update is called once per frame
     void Update()
     {
-        /*if(enemyShips.Count<activeEnemyShips)
+        if (enemyShips.Count < maxEnemyShips)
         {
             SpawnEnemy();
-            Debug.Log("low number of enemy ships");
-        }*/
-        if(allyShips.Count<activeEnemyShips)
-        {/*
-            SpawnObject(allyShip);*/
+        }
+
+        frieghterTimer -=Time.deltaTime;
+
+        if(frieghterTimer<=0)
+        {
+            SpawnFreighter();
+            frieghterTimer = 60f;
+        }
+        if (allyShips.Count<maxAllyShips)
+        {
+            SpawnAlly();
         }
     }
 
@@ -77,18 +78,83 @@ public class SpawnManager : MonoBehaviour
             Random.Range(minPosition.y-2, maxPosition.y+2), 0f); 
          CollidableObject spawnedObject = Instantiate(astroid, spawnPosition, Quaternion.identity);
         collisionManager.SpawnCollidable(spawnedObject);
-        activeAstroids++;
-        Debug.Log("tried to spawn a new astroid");
+        
+        /*Debug.Log("tried to spawn a new astroid");*/
     }
 
     private void SpawnEnemy()
     {
         Vector3 spawnPosition = new Vector3(Random.Range(minPosition.x - 2, maxPosition.x + 2),
             Random.Range(minPosition.y - 2, maxPosition.y + 2), 0f);
+
         CollidableObject spawnedObject = Instantiate(enemyShip, spawnPosition, Quaternion.identity);
-        spawnedObject.GetComponent<Enemy>().SetFields(player, enemyAmmo);
-        spawnedObject.GetComponent<AI_Chaser>().SetFields(player);
+        spawnedObject.GetComponent<Enemy>().SetFields(currentPlayer, enemyAmmo);
+
         collisionManager.SpawnCollidable(spawnedObject);
-        Debug.Log("tried to spawn a new object");
+        enemyShips.Add(spawnedObject);
+        /*Debug.Log("tried to spawn a new enemy ship");*/
+    }
+    private void SpawnPlayer()
+    {
+         currentPlayer = Instantiate(player, Vector3.zero, Quaternion.identity);
+        collisionManager.SpawnCollidable(currentPlayer);
+        /*Debug.Log("tried to spawn a new enemy ship");*/
+    }
+
+    private void SpawnFreighter()
+    {
+        Vector3 spawnPosition = new Vector3(Random.Range(minPosition.x - 2, maxPosition.x + 2),
+            Random.Range(minPosition.y - 2, maxPosition.y + 2), 0f);
+
+        CollidableObject spawnedObject = Instantiate(enemyFreighter, spawnPosition, Quaternion.identity);
+        spawnedObject.GetComponent<Enemy_Freighter>().SetFields(currentPlayer, enemyAmmo);
+
+        collisionManager.SpawnCollidable(spawnedObject);
+        enemyFreighters.Add(spawnedObject);
+        /*Debug.Log("tried to spawn a new enemy ship");*/
+    }
+    private void SpawnAlly()
+    {
+        Vector3 spawnPosition = new Vector3(Random.Range(minPosition.x - 2, maxPosition.x + 2),
+            Random.Range(minPosition.y - 2, maxPosition.y + 2), 0f);
+
+        CollidableObject spawnedObject = Instantiate(allyShip, spawnPosition, Quaternion.identity);
+        spawnedObject.GetComponent<Ally>().SetFields(currentPlayer, allyAmmo);
+
+        collisionManager.SpawnCollidable(spawnedObject);
+        allyShips.Add(spawnedObject);
+        /*Debug.Log("tried to spawn a new ally ship");*/
+    }
+    public void AddEnemy(CollidableObject enemy)
+    {
+        enemyShips.Add(enemy);
+    }
+    public void RemoveEnemy(CollidableObject ship)
+    {
+        for (int i = 0; i < enemyShips.Count; i++)
+        {
+            if (enemyShips[i] == ship)
+            {
+                enemyShips.Remove(enemyShips[i]);
+            }
+        }
+    }
+    public void RemovePlayer(CollidableObject ship)
+    {
+         if (player == ship)
+            {
+            player = null;
+            }
+        
+    }
+    public void RemoveAlly(CollidableObject ship)
+    {
+        for (int i = 0; i < allyShips.Count; i++)
+        {
+            if (allyShips[i] == ship)
+            {
+                allyShips.Remove(allyShips[i]);
+            }
+        }
     }
 }

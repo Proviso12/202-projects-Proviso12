@@ -2,27 +2,29 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class CollisionManager : MonoBehaviour
 {
     //store all of the colidable objects in my scene
     //[HideInInspector]
     public List<CollidableObject> collidableObjects = new List<CollidableObject>();
-    public bool isUsingCircleCollision = false;
     private SpriteRenderer spriteRenderer;
-
+    private SpawnManager spawnManager;
+    public static int playerScore =0;
+    public Text textMesh;
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("collision manager on");
         spriteRenderer = GetComponent<SpriteRenderer>();
-
+        spawnManager = GameObject.FindGameObjectWithTag("SpawnManager").GetComponent<SpawnManager>();
         foreach (GameObject collidable in GameObject.FindGameObjectsWithTag("Collidable"))
         {
             collidableObjects.Add(collidable.GetComponent<CollidableObject>());
-            Debug.Log("found collidable");
         }
-        collidableObjects.Add(GameObject.FindGameObjectWithTag("Player").GetComponent<CollidableObject>());
+        textMesh = FindObjectOfType<Text>();
+        textMesh.text = "Score: ";
     }
 
     // Update is called once per frame
@@ -35,49 +37,38 @@ public class CollisionManager : MonoBehaviour
         }
 
         //check to see if any of the objects are colliding with each other
-        for (int i = 0; i < collidableObjects.Count; i++)
+        for (int i = collidableObjects.Count - 1; i >= 0; i--)
         {
-            for (int j = i+1; j < collidableObjects.Count; j++)
+
+            for (int j = collidableObjects.Count-1; j >= 0; j--)
             {
-                if (isUsingCircleCollision)
-                {
-                    //do circle collision check
-                    if(CircleCollision(collidableObjects[i], collidableObjects[j]))
-                    {
-                        collidableObjects[i].isCurrentlyColliding = true;
-                        collidableObjects[j].isCurrentlyColliding = true;
-                    }
-
-                }
-                else
-                {
-                    if (AABBCollision(collidableObjects[i], collidableObjects[j]))
-                    {
-                        //do my collision resolution on them
-                        collidableObjects[i].isCurrentlyColliding = true;
-                        collidableObjects[j].isCurrentlyColliding = true;
-                    }
-
-                }
+                if (i == j) continue;
                 
+                //do circle collision check
+                if (CircleCollision(collidableObjects[i], collidableObjects[j]))
+                {
+                    collidableObjects[i].isCurrentlyColliding = true;
+                    collidableObjects[j].isCurrentlyColliding = true;
+
+                    if (collidableObjects[j].GetComponent<Shots>()!=null && collidableObjects[i].GetComponent<Shots>() == null )
+                    {
+                        Debug.Log(collidableObjects[i] + " was shot by " + collidableObjects[j]);
+                        if(OnHit(collidableObjects[i], collidableObjects[j].GetComponent<Shots>()))
+                        {
+                            break;
+                        }
+                        
+                        continue;
+                    }
+                    
+                }
+                if(collidableObjects[i].GetComponent<Enemy>() != null)
+                {
+                    collidableObjects[j].GetComponent<Ally>()?.LookOut(collidableObjects[i].GetComponent<Enemy>());
+                }
             }
         }
-    }
-    private bool AABBCollision(CollidableObject objectA, CollidableObject objectB)
-    {
-        Vector3 aMin = objectA.spriteRenderer.bounds.min;
-        Vector3 aMax = objectA.spriteRenderer.bounds.max;
-        Vector3 bMin = objectB.spriteRenderer.bounds.min;
-        Vector3 bMax = objectB.spriteRenderer.bounds.max;
-        if(aMax.x>bMin.x &&
-           aMin.x<bMax.x &&
-           aMax.y > bMin.y &&
-           aMin.y < bMax.y)
-        {
-            return true;
-        }
-
-        return false;
+        textMesh.text = "Score: "+playerScore;
     }
 
     private bool CircleCollision(CollidableObject objectA, CollidableObject objectB)
@@ -95,23 +86,15 @@ public class CollisionManager : MonoBehaviour
         {
             return false;
         }
-        
-    }
-
-    public void SwitchToCircleCollision()
-    {
-        isUsingCircleCollision = true;
-    }
-
-    public void SwitchToAABB()
-    {
-        isUsingCircleCollision = false;
     }
 
     public void SpawnCollidable(CollidableObject obj)
     {
         collidableObjects.Add(obj);
-        Debug.Log("placed a ship or astroid");
+    }
+    public void SpawnShot(Shots shot)
+    {
+        collidableObjects.Add(shot.GetComponent<CollidableObject>());
     }
 
     public List<CollidableObject> GetAstroids()
@@ -138,16 +121,99 @@ public class CollisionManager : MonoBehaviour
         }
         return enemies;
     }
-    /*public List<CollidableObject> GetAllyShips()
+    public List<CollidableObject> GetEnemies2()
     {
-        List<CollidableObject> allyShips = new List<CollidableObject>();
+        List<CollidableObject> enemies = new List<CollidableObject>();
         for (int i = 0; i < collidableObjects.Count; i++)
         {
-            if (collidableObjects[i].GetComponent<Float>() != null)
+            if (collidableObjects[i].GetComponent<Enemy_Freighter>() != null)
             {
-                allyShips.Add(collidableObjects[i]);
+                enemies.Add(collidableObjects[i]);
             }
         }
-        return allyShips;
-    }*/
+        return enemies;
+    }
+    public List<CollidableObject> GetAllies()
+    {
+        List<CollidableObject> allies = new List<CollidableObject>();
+        for (int i = 0; i < collidableObjects.Count; i++)
+        {
+            if (collidableObjects[i].GetComponent<Ally>() != null)
+            {
+                allies.Add(collidableObjects[i]);
+            }
+        }
+        return allies;
+    }
+    public void RemoveShot(Shots shot)
+    {
+        for (int i = 0; i < collidableObjects.Count; i++)
+        {
+            if(collidableObjects[i] == shot.GetComponent<CollidableObject>())
+            {
+                collidableObjects.Remove(collidableObjects[i]);
+            }
+        }
+    }
+    public void RemoveEnemy(Enemy ship)
+    {
+        for (int i = 0; i < collidableObjects.Count; i++)
+        {
+            if (collidableObjects[i] == ship.GetComponent<CollidableObject>())
+            {
+                collidableObjects.Remove(collidableObjects[i]);
+            }
+        }
+    }
+    public void RemoveAlly(Ally ship)
+    {
+        for (int i = 0; i < collidableObjects.Count; i++)
+        {
+            if (collidableObjects[i] == ship.GetComponent<CollidableObject>())
+            {
+                collidableObjects.Remove(collidableObjects[i]);
+            }
+        }
+    }
+    public bool OnHit(CollidableObject ship, Shots shot)
+    {
+        if(ship.GetComponent<Enemy>()?.TakeDamage(shot.Damage)<=0)
+        {
+            collidableObjects.Remove(ship);
+            spawnManager.RemoveEnemy(ship);
+            Destroy(ship.gameObject);
+            playerScore += 15;
+            Debug.Log("enemy ship was destroyed, ship: " + ship);
+            return true;
+        }
+        if (ship.GetComponent<Enemy_Freighter>()?.TakeDamage(shot.Damage) <= 0)
+        {
+            collidableObjects.Remove(ship);
+            spawnManager.RemoveEnemy(ship);
+            Destroy(ship.gameObject);
+            playerScore += 500;
+            Debug.Log("enemy ship was destroyed, ship: " + ship);
+            return true;
+        }
+        if (ship.GetComponent<Ally>()?.TakeDamage(shot.Damage) <= 0)
+        {
+            collidableObjects.Remove(ship);
+            spawnManager.RemoveAlly(ship);
+            Destroy(ship.gameObject);
+            playerScore -= 300;
+            Debug.Log("ally ship was destroyed, ship: " + ship);
+            return true;
+        }
+        if (ship.GetComponent<Player>()?.TakeDamage(shot.Damage) <= 0)
+        {
+            /*collidableObjects.Remove(ship);
+            spawnManager.RemovePlayer(ship);
+            Destroy(ship.gameObject);*/
+            SceneManager.LoadScene("GameOver");
+            Debug.Log("player ship was destroyed, ship: " + ship);
+        }
+        collidableObjects.Remove(shot.GetComponent<CollidableObject>());
+        Destroy(shot.gameObject);
+        return false;
+    }
 }

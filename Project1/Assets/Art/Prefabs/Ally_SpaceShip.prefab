@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4573869318917238960}
   - component: {fileID: 4573869318917238961}
   - component: {fileID: 4573869318917238962}
+  - component: {fileID: 8743886435155621175}
   m_Layer: 0
   m_Name: Ally_SpaceShip
   m_TagString: Collidable
@@ -71,8 +72,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 754604305
+  m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: c10328c6a622b8541b33a78b406bc758, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -100,3 +101,19 @@ MonoBehaviour:
   isCurrentlyColliding: 0
   radius: 0.2
   spriteRenderer: {fileID: 0}
+--- !u!114 &8743886435155621175
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4573869318917238963}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea3a4e996668a0948b4b34a43d67d104, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 8937831904480880859, guid: 810cceb0b2bd6b340acbaf615bbd3257, type: 3}
+  bullet: {fileID: 9108711624538572475, guid: dcd1e2534a66f624b88c7dd913505182, type: 3}
+  spriteRenderer: {fileID: 0}
+  collisionManager: {fileID: 0}

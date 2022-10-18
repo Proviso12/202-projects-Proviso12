@@ -8,4 +8,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SHUMp project.unity
     guid: 1cd1fd153a7ae1a41a591ac2ac23f18f
+  - enabled: 1
+    path: Assets/Scenes/GameOver.unity
+    guid: ef16ddc088dcb074aa9cb68e2ff9bfb3
   m_configObjects: {}

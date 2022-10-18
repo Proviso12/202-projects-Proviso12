@@ -5,12 +5,12 @@ using UnityEngine;
 public class CollidableObject : MonoBehaviour
 {
     public bool isCurrentlyColliding = false;
-    
+
     public float radius = 1f;
     [HideInInspector]
     public SpriteRenderer spriteRenderer;
 
-    public SpriteRenderer SpriteRenderer{ get { return spriteRenderer; } }
+    public SpriteRenderer SpriteRenderer { get { return spriteRenderer; } }
     // Start is called before the first frame update
     void Start()
     {
@@ -22,7 +22,7 @@ public class CollidableObject : MonoBehaviour
     void Update()
     {
         //if colliding, turn me red
-        if(isCurrentlyColliding)
+        if (isCurrentlyColliding)
         {
             spriteRenderer.color = Color.red;
         }
@@ -36,9 +36,9 @@ public class CollidableObject : MonoBehaviour
     {
         isCurrentlyColliding = false;
     }
-    public void RegisterCollision()
+    public void RegisterCollision(CollidableObject objectB)
     {
-        
+
     }
     private void OnDrawGizmos()
     {
@@ -50,10 +50,10 @@ public class CollidableObject : MonoBehaviour
         {
             Gizmos.color = Color.green;
         }
-        
+
         Gizmos.DrawWireSphere(transform.position, radius);
 
-        if(spriteRenderer==null)
+        if (spriteRenderer == null)
         {
             return;
         }

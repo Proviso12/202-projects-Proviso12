@@ -7,39 +7,45 @@ public class PlayerShoot : MonoBehaviour
 {
     public Shots bullet;
 
-    private List<Shots> shotsFired = new List<Shots>();
+    private float speed = 10f;
+    private float maxShootTimer = .2f;
+    private float shootTimer;
+    private CollisionManager collisionManager;
     // Start is called before the first frame update
     void Start()
     {
-
+        collisionManager = GameObject.FindGameObjectWithTag("CollisionManager").GetComponent<CollisionManager>();
+        shootTimer = maxShootTimer;
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        shootTimer -= Time.deltaTime;
     }
 
     public void OnShoot()
     {
-        Vector3 mousePos = GetMousePos();
-        float speed = .005f;
-        Vector3 direction = mousePos - transform.position;
-        direction.Normalize();
-        Vector3 velocity = direction * speed * Time.deltaTime;
-        velocity.Normalize();
-        Shots spawnedBullet = Instantiate(bullet,
-            new Vector3(transform.position.x, transform.position.y, 0f),
-        Quaternion.identity);
-        spawnedBullet.Shoot(speed, velocity, direction);
-        shotsFired.Add(spawnedBullet);
-        Debug.Log("ally Shot bullets");
+        if(shootTimer<=0)
+        {
+            Vector3 mousePos = GetMousePos();
+            Vector3 velocity = mousePos - transform.position;
+            velocity.Scale(new Vector3(1, 1, 0));
+            velocity.Normalize();
+            Shots spawnedBullet = Instantiate(bullet,
+                new Vector3(transform.position.x, transform.position.y)+velocity,
+            Quaternion.identity);
+            spawnedBullet.Shoot(speed, velocity, 15, false);
+            collisionManager.SpawnShot(spawnedBullet);
+            shootTimer = maxShootTimer;
+            /*Debug.Log(" player Shot bullets");*/
+        }
+        
     }
 
     private Vector3 GetMousePos()
     {
         Vector3 mousePos = Mouse.current.position.ReadValue();
-        mousePos.z = Camera.main.nearClipPlane;
         /*Vector3 worldPos = Camera.main.ScreenToWorldPoint(mousePos);*/
         return Camera.main.ScreenToWorldPoint(mousePos);
     }
