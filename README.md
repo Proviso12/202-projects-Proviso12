@@ -9,6 +9,9 @@ link to exercise repo: https://github.com/IGME-202-2221/202-exercises-Proviso12
 
 project 1:
 
-project controls: WASD to move
+project controls: WASD to move, 
+left mouse button to shoot in any direction
 
-i will allow the player to command a fleet of space ships
+to made it my own i made all of the assets by myself 
+and allowed the player to have a few ships as a 
+fleet to help them kill the enemy fleets
