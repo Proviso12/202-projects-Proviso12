@@ -12,6 +12,12 @@ project 1:
 project controls: WASD to move, 
 left mouse button to shoot in any direction
 
-to made it my own i made all of the assets by myself 
+all art credit goes to myself. 
+
+this is a basic top down space themed shoot them up 
+where you are a strong little ship
+who is attacking multiple fleets of enemy ships with 
+the help of your own small fighter allies.
+to make it my own I made all of the assets by myself 
 and allowed the player to have a few ships as a 
 fleet to help them kill the enemy fleets
